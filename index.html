@@ -3,300 +3,728 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interview Simulator</title>
+
+    <title>InterviewAI | Smart Interview Simulator</title>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #eef2ff, #f8fafc);
-            color: #1e293b;
-        }
-
-        /* NAVBAR */
-        nav {
-            height: 70px;
-            background: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 7%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4f46e5;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #475569;
-            margin-left: 25px;
-            font-size: 15px;
-        }
-
-        nav a:hover {
-            color: #4f46e5;
-        }
-
-        /* HERO */
-        .hero {
-            text-align: center;
-            padding: 60px 20px 35px;
-        }
-
-        .hero h1 {
-            font-size: 44px;
-            margin-bottom: 15px;
-            color: #111827;
-        }
-
-        .hero h1 span {
-            color: #4f46e5;
-        }
-
-        .hero p {
-            max-width: 650px;
-            margin: auto;
-            color: #64748b;
-            font-size: 17px;
+            font-family: 'Inter', sans-serif;
+            background: #080b18;
+            color: #ffffff;
             line-height: 1.6;
         }
 
-        /* MAIN CARD */
-        .container {
-            width: 90%;
-            max-width: 850px;
-            margin: 20px auto 60px;
+        a {
+            text-decoration: none;
+            color: inherit;
         }
 
-        .card {
-            background: white;
+        /* ================= NAVBAR ================= */
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(8, 11, 24, 0.88);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .logo span {
+            color: #8b5cf6;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #b9bfd3;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .nav-button {
+            padding: 10px 18px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            color: white !important;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: #6d28d9;
+            filter: blur(180px);
+            opacity: 0.22;
+            top: -150px;
+            left: 10%;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: #2563eb;
+            filter: blur(180px);
+            opacity: 0.18;
+            bottom: -150px;
+            right: 10%;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #c4b5fd;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 {
+            font-size: clamp(45px, 7vw, 78px);
+            line-height: 1.05;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #a78bfa, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: #a8afc3;
+            max-width: 700px;
+            margin: auto;
+            font-size: 18px;
+        }
+
+        .hero-buttons {
+            margin-top: 35px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .primary-button,
+        .secondary-button {
+            padding: 14px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .primary-button {
+            background: linear-gradient(135deg, #7c3aed, #4f46e5);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.25);
+        }
+
+        .secondary-button {
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .primary-button:hover,
+        .secondary-button:hover {
+            transform: translateY(-3px);
+        }
+
+        /* ================= SECTIONS ================= */
+
+        .section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .section-heading h2 {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .section-heading p {
+            color: #9ca3b7;
+        }
+
+        /* ================= STATS ================= */
+
+        .hero-stats {
+            margin-top: 65px;
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .stat h3 {
+            font-size: 30px;
+        }
+
+        .stat p {
+            font-size: 13px;
+            color: #8f96aa;
+        }
+
+        /* ================= HOW IT WORKS ================= */
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .step-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 30px;
+            border-radius: 18px;
+            transition: 0.3s;
+        }
+
+        .step-card:hover {
+            transform: translateY(-7px);
+            border-color: rgba(139,92,246,0.5);
+        }
+
+        .step-number {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg,#7c3aed,#4f46e5);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .step-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            color: #9ca3af;
+        }
+
+        /* ================= FEATURES ================= */
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .feature-card {
+            padding: 30px;
+            border-radius: 18px;
+            background: linear-gradient(
+                145deg,
+                rgba(255,255,255,0.06),
+                rgba(255,255,255,0.02)
+            );
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            border-color: #6d5ce7;
+        }
+
+        .feature-icon {
+            font-size: 30px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        /* ================= LEARN MORE ================= */
+
+        .learn-section {
+            background: linear-gradient(
+                135deg,
+                rgba(124,58,237,0.12),
+                rgba(37,99,235,0.06)
+            );
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .learn-content {
+            max-width: 1200px;
+            margin: auto;
+            padding: 100px 20px;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .learn-content h2 {
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .learn-content p {
+            color: #a7adbf;
+            margin-bottom: 20px;
+        }
+
+        .learn-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 30px;
+            border-radius: 20px;
+        }
+
+        .mini-card {
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .mini-card strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .mini-card span {
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        /* ================= ABOUT ================= */
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-content p {
+            color: #a6adbf;
+            margin-bottom: 18px;
+        }
+
+        .about-highlight {
+            padding: 30px;
+            border-radius: 20px;
+            background: linear-gradient(145deg, #11162b, #0d1121);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .about-highlight h3 {
+            color: #a78bfa;
+            margin-bottom: 15px;
+        }
+
+        /* ================= CTA ================= */
+
+        .cta-section {
+            text-align: center;
+            padding: 100px 20px;
+            background: linear-gradient(
+                135deg,
+                rgba(124,58,237,0.18),
+                rgba(37,99,235,0.10)
+            );
+        }
+
+        .cta-section h2 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .cta-section p {
+            color: #a6adbf;
+            margin-bottom: 30px;
+        }
+
+        /* ================= CONTACT ================= */
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .contact-icon {
+            font-size: 24px;
+        }
+
+        .contact-item h4 {
+            margin-bottom: 4px;
+        }
+
+        .contact-item p {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #111629;
+            color: white;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .contact-form textarea {
+            height: 140px;
+            resize: vertical;
+        }
+
+        /* ================= INTERVIEW ================= */
+
+        #interview {
+            display: none;
+            padding: 90px 20px;
+            background: #0b0f20;
+        }
+
+        .interview-container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .interview-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .interview-header h2 {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .interview-header p {
+            color: #9ca3af;
+        }
+
+        .setup-card,
+        .question-card,
+        .result-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.09);
             border-radius: 20px;
             padding: 35px;
-            box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
+            margin-top: 25px;
         }
 
-        .card h2 {
-            margin-bottom: 25px;
-            color: #111827;
-        }
-
-        /* FORM */
         .form-group {
             margin-bottom: 20px;
         }
 
-        label {
+        .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
+            color: #cbd0df;
+            font-size: 14px;
         }
 
-        input,
-        select,
-        textarea {
+        .form-group input,
+        .form-group select,
+        .answer-box {
             width: 100%;
             padding: 14px;
-            border: 1px solid #cbd5e1;
             border-radius: 10px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: #4f46e5;
-        }
-
-        textarea {
-            min-height: 180px;
-            resize: vertical;
-        }
-
-        /* BUTTON */
-        button {
-            border: none;
-            padding: 14px 25px;
-            border-radius: 10px;
-            background: #4f46e5;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: #111629;
             color: white;
-            font-size: 15px;
-            font-weight: bold;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-group select option {
+            background: #111629;
+        }
+
+        .start-btn,
+        .next-btn,
+        .skip-btn,
+        .restart-btn {
+            border: none;
             cursor: pointer;
-            transition: 0.3s;
+            padding: 13px 22px;
+            border-radius: 10px;
+            font-weight: 600;
+            color: white;
+            margin-top: 10px;
         }
 
-        button:hover {
-            background: #4338ca;
-            transform: translateY(-2px);
+        .start-btn,
+        .next-btn,
+        .restart-btn {
+            background: linear-gradient(135deg,#7c3aed,#4f46e5);
         }
 
-        .secondary-btn {
-            background: #e2e8f0;
-            color: #1e293b;
-        }
-
-        .secondary-btn:hover {
-            background: #cbd5e1;
-        }
-
-        /* INTERVIEW SCREEN */
-        #interviewScreen,
-        #resultScreen {
-            display: none;
-        }
-
-        .interview-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e2e8f0;
+        .skip-btn {
+            background: rgba(255,255,255,0.08);
         }
 
         .timer {
-            background: #eef2ff;
-            color: #4f46e5;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-
-        .progress {
-            margin-bottom: 25px;
-        }
-
-        .progress-text {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        .progress-bar {
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            width: 20%;
-            background: #4f46e5;
-            transition: width 0.3s;
-        }
-
-        .question-box {
-            background: #f8fafc;
-            padding: 25px;
-            border-radius: 15px;
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 30px;
+            background: rgba(239,68,68,0.12);
+            color: #fca5a5;
             margin-bottom: 20px;
         }
 
-        .question-box small {
-            color: #4f46e5;
-            font-weight: bold;
+        .progress-container {
+            height: 7px;
+            background: #20253a;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 25px;
         }
 
-        .question-box h3 {
-            margin-top: 10px;
-            line-height: 1.5;
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg,#7c3aed,#3b82f6);
+            transition: 0.3s;
         }
 
-        .actions {
+        .question-text {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .answer-box {
+            height: 170px;
+            resize: vertical;
+        }
+
+        .interview-actions {
             display: flex;
-            justify-content: flex-end;
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
-        /* RESULT */
-        .result {
-            text-align: center;
-        }
-
-        .score-circle {
-            width: 150px;
-            height: 150px;
+        .score {
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
-            background: #eef2ff;
-            border: 10px solid #4f46e5;
+            margin: 20px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 30px auto;
+            background: linear-gradient(135deg,#7c3aed,#2563eb);
+            font-size: 35px;
+            font-weight: 800;
         }
 
-        .score-circle span {
-            font-size: 36px;
-            font-weight: bold;
-            color: #4f46e5;
+        .result-card {
+            text-align: center;
         }
 
         .feedback {
-            text-align: left;
-            background: #f8fafc;
-            padding: 20px;
-            border-radius: 12px;
-            margin: 25px 0;
+            color: #a8afc3;
+            margin: 20px auto;
+            max-width: 600px;
         }
 
-        .feedback p {
-            margin: 10px 0;
-            line-height: 1.6;
-        }
+        /* ================= FOOTER ================= */
 
         footer {
-            text-align: center;
-            padding: 25px;
-            color: #64748b;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding: 60px 20px 25px;
+            background: #060914;
+        }
+
+        .footer-main {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 50px;
+        }
+
+        .footer-brand p {
+            color: #8f96aa;
+            max-width: 350px;
+            margin-top: 15px;
             font-size: 14px;
         }
 
-        /* MOBILE */
-        @media (max-width: 600px) {
-            nav {
-                padding: 0 5%;
+        .footer-column h4 {
+            margin-bottom: 15px;
+        }
+
+        .footer-column a {
+            display: block;
+            color: #8f96aa;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 50px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            display: flex;
+            justify-content: space-between;
+            color: #6f7587;
+            font-size: 13px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 850px) {
+
+            .nav-links {
+                display: none;
             }
 
-            nav a {
-                margin-left: 10px;
-                font-size: 13px;
+            .steps,
+            .features-grid,
+            .about-content,
+            .contact-container,
+            .learn-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-main {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                min-height: 80vh;
             }
 
             .hero h1 {
+                font-size: 45px;
+            }
+
+            .section-heading h2,
+            .learn-content h2,
+            .cta-section h2 {
                 font-size: 32px;
             }
 
-            .card {
-                padding: 22px;
-            }
-
-            .interview-header {
-                align-items: flex-start;
-                gap: 15px;
+            .footer-bottom {
                 flex-direction: column;
-            }
-
-            .actions {
-                flex-direction: column;
-            }
-
-            button {
-                width: 100%;
+                gap: 10px;
             }
         }
     </style>
@@ -304,366 +732,839 @@
 
 <body>
 
-    <!-- NAVBAR -->
-    <nav>
-        <div class="logo">InterviewAI</div>
+    <!-- ================= NAVBAR ================= -->
 
-        <div>
-            <a href="#">Home</a>
-            <a href="#">Practice</a>
-            <a href="#">About</a>
+    <nav>
+        <div class="navbar">
+
+            <a href="#home" class="logo">
+                Interview<span>AI</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#features">Features</a>
+                <a href="#about">About Us</a>
+                <a href="#contact">Contact</a>
+                <a href="#interview" class="nav-button">Start Interview</a>
+            </div>
+
         </div>
     </nav>
 
-    <!-- HERO -->
-    <section class="hero">
-        <h1>Practice. <span>Prepare.</span> Succeed.</h1>
 
-        <p>
-            Simulate real job interviews, practice your answers,
-            and get instant feedback to improve your interview skills.
-        </p>
+    <!-- ================= HERO ================= -->
+
+    <section class="hero" id="home">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                ✦ Smart Interview Practice Platform
+            </div>
+
+            <h1>
+                Prepare Smarter.<br>
+                <span class="gradient-text">Interview Better.</span>
+            </h1>
+
+            <p>
+                Practice realistic interview questions, improve your answers,
+                build confidence and prepare yourself for your next career opportunity.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#interview" class="primary-button">
+                    Start Interview →
+                </a>
+
+                <a href="#how-it-works" class="secondary-button">
+                    Learn More
+                </a>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div class="stat">
+                    <h3>50+</h3>
+                    <p>Interview Questions</p>
+                </div>
+
+                <div class="stat">
+                    <h3>6+</h3>
+                    <p>Career Categories</p>
+                </div>
+
+                <div class="stat">
+                    <h3>24/7</h3>
+                    <p>Practice Anytime</p>
+                </div>
+
+            </div>
+
+        </div>
+
     </section>
 
 
-    <main class="container">
+    <!-- ================= HOW IT WORKS ================= -->
 
-        <!-- SETUP SCREEN -->
-        <section class="card" id="setupScreen">
+    <section class="section" id="how-it-works">
 
-            <h2>Start Your Interview</h2>
+        <div class="section-heading">
 
-            <div class="form-group">
-                <label for="candidateName">Your Name</label>
-                <input
-                    type="text"
-                    id="candidateName"
-                    placeholder="Enter your name"
-                >
+            <h2>How It Works</h2>
+
+            <p>
+                Start practicing in just three simple steps.
+            </p>
+
+        </div>
+
+        <div class="steps">
+
+            <div class="step-card">
+
+                <div class="step-number">01</div>
+
+                <h3>Choose Your Role</h3>
+
+                <p>
+                    Select the job role you are preparing for and tell us about
+                    your experience level.
+                </p>
+
             </div>
 
-            <div class="form-group">
-                <label for="jobRole">Select Job Role</label>
+            <div class="step-card">
 
-                <select id="jobRole">
-                    <option value="Frontend Developer">
-                        Frontend Developer
-                    </option>
+                <div class="step-number">02</div>
 
-                    <option value="Backend Developer">
-                        Backend Developer
-                    </option>
+                <h3>Answer Questions</h3>
 
-                    <option value="Data Analyst">
-                        Data Analyst
-                    </option>
+                <p>
+                    Answer interview questions just like you would during
+                    a real interview.
+                </p>
 
-                    <option value="Software Developer">
-                        Software Developer
-                    </option>
-
-                    <option value="HR">
-                        Human Resources
-                    </option>
-
-                    <option value="Marketing">
-                        Marketing
-                    </option>
-                </select>
             </div>
 
-            <div class="form-group">
-                <label for="experience">Experience Level</label>
+            <div class="step-card">
 
-                <select id="experience">
-                    <option>Fresher</option>
-                    <option>0-2 Years</option>
-                    <option>2-5 Years</option>
-                    <option>5+ Years</option>
-                </select>
+                <div class="step-number">03</div>
+
+                <h3>See Your Results</h3>
+
+                <p>
+                    Get a performance score and feedback to understand
+                    where you can improve.
+                </p>
+
             </div>
 
-            <button onclick="startInterview()">
-                Start Interview →
-            </button>
+        </div>
 
-        </section>
+    </section>
 
 
-        <!-- INTERVIEW SCREEN -->
-        <section class="card" id="interviewScreen">
+    <!-- ================= FEATURES ================= -->
+
+    <section class="section" id="features">
+
+        <div class="section-heading">
+
+            <h2>Powerful Features</h2>
+
+            <p>
+                Everything you need to become more confident before your interview.
+            </p>
+
+        </div>
+
+        <div class="features-grid">
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🎯</div>
+
+                <h3>Role-Based Questions</h3>
+
+                <p>
+                    Practice questions designed for different professional roles
+                    and career paths.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="feature-icon">⏱️</div>
+
+                <h3>Timed Interviews</h3>
+
+                <p>
+                    Experience realistic time pressure while answering interview
+                    questions.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="feature-icon">📊</div>
+
+                <h3>Performance Score</h3>
+
+                <p>
+                    Understand your performance through a simple interview score.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="feature-icon">💡</div>
+
+                <h3>Instant Feedback</h3>
+
+                <p>
+                    Receive feedback based on your answers and improve your
+                    interview preparation.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="feature-icon">💻</div>
+
+                <h3>Multiple Career Roles</h3>
+
+                <p>
+                    Prepare for Frontend, Backend, Data Analyst, HR,
+                    Marketing and Software Development roles.
+                </p>
+
+            </div>
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🚀</div>
+
+                <h3>Practice Anytime</h3>
+
+                <p>
+                    Prepare for interviews whenever you want without needing
+                    another person to conduct the interview.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= LEARN MORE ================= -->
+
+    <section class="learn-section">
+
+        <div class="learn-content">
+
+            <div>
+
+                <h2>Turn Practice Into Confidence.</h2>
+
+                <p>
+                    Interviews can be stressful when you don't know what to expect.
+                    InterviewAI gives you a simple environment where you can practice,
+                    make mistakes and improve before facing the real interview.
+                </p>
+
+                <p>
+                    Choose your career role, answer questions and review your
+                    performance. The goal is simple — help you become more prepared.
+                </p>
+
+                <a href="#interview" class="primary-button">
+                    Try Interview Simulator
+                </a>
+
+            </div>
+
+            <div class="learn-card">
+
+                <div class="mini-card">
+                    <strong>🎯 Practice</strong>
+                    <span>Improve your interview answering skills.</span>
+                </div>
+
+                <div class="mini-card">
+                    <strong>📈 Improve</strong>
+                    <span>Understand your strengths and weaknesses.</span>
+                </div>
+
+                <div class="mini-card">
+                    <strong>🚀 Prepare</strong>
+                    <span>Walk into your interview with greater confidence.</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= ABOUT US ================= -->
+
+    <section class="section" id="about">
+
+        <div class="section-heading">
+
+            <h2>About InterviewAI</h2>
+
+            <p>
+                Built to make interview preparation easier and more accessible.
+            </p>
+
+        </div>
+
+        <div class="about-content">
+
+            <div>
+
+                <p>
+                    InterviewAI is an interview practice platform designed
+                    for students, freshers and professionals who want to
+                    improve their interview skills.
+                </p>
+
+                <p>
+                    Our platform provides structured interview practice
+                    so users can prepare before attending real interviews.
+                </p>
+
+                <p>
+                    Whether you are preparing for your first internship,
+                    a graduate job or your next career opportunity,
+                    InterviewAI helps you practice at your own pace.
+                </p>
+
+            </div>
+
+            <div class="about-highlight">
+
+                <h3>Our Mission</h3>
+
+                <p>
+                    To make interview preparation simple, practical and
+                    accessible for everyone.
+                </p>
+
+                <h3>Our Vision</h3>
+
+                <p>
+                    To create a smarter preparation experience where
+                    candidates can practice before they face the real world.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="cta-section">
+
+        <h2>Ready to Practice?</h2>
+
+        <p>
+            Start your interview simulation and see how prepared you are.
+        </p>
+
+        <a href="#interview" class="primary-button">
+            Start Your Interview →
+        </a>
+
+    </section>
+
+
+    <!-- ================= INTERVIEW SIMULATOR ================= -->
+
+    <section id="interview">
+
+        <div class="interview-container">
 
             <div class="interview-header">
 
-                <div>
-                    <h2>Interview Session</h2>
-                    <p id="candidateInfo"></p>
-                </div>
+                <h2>Interview Simulator</h2>
 
-                <div class="timer">
-                    ⏱ <span id="timer">60</span>s
-                </div>
+                <p>
+                    Select your role and start practicing.
+                </p>
 
             </div>
 
 
-            <!-- PROGRESS -->
-            <div class="progress">
+            <!-- SETUP -->
 
-                <div class="progress-text">
-                    <span id="questionNumber">
-                        Question 1 of 5
-                    </span>
+            <div class="setup-card" id="setupScreen">
 
-                    <span id="percentage">
-                        20%
-                    </span>
+                <div class="form-group">
+
+                    <label>Your Name</label>
+
+                    <input
+                        type="text"
+                        id="candidateName"
+                        placeholder="Enter your name"
+                    >
+
                 </div>
 
-                <div class="progress-bar">
+
+                <div class="form-group">
+
+                    <label>Job Role</label>
+
+                    <select id="jobRole">
+
+                        <option value="frontend">
+                            Frontend Developer
+                        </option>
+
+                        <option value="backend">
+                            Backend Developer
+                        </option>
+
+                        <option value="data">
+                            Data Analyst
+                        </option>
+
+                        <option value="software">
+                            Software Developer
+                        </option>
+
+                        <option value="hr">
+                            HR
+                        </option>
+
+                        <option value="marketing">
+                            Marketing
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Experience</label>
+
+                    <select id="experience">
+
+                        <option>Fresher</option>
+                        <option>0-2 Years</option>
+                        <option>2-5 Years</option>
+                        <option>5+ Years</option>
+
+                    </select>
+
+                </div>
+
+
+                <button class="start-btn" onclick="startInterview()">
+                    Start Interview →
+                </button>
+
+            </div>
+
+
+            <!-- QUESTIONS -->
+
+            <div class="question-card" id="questionScreen" style="display:none;">
+
+                <div class="timer" id="timer">
+                    ⏱ 60s
+                </div>
+
+                <div class="progress-container">
+
                     <div
-                        class="progress-fill"
-                        id="progressFill">
+                        class="progress-bar"
+                        id="progressBar">
                     </div>
+
                 </div>
 
-            </div>
+                <p id="questionNumber"></p>
 
-
-            <!-- QUESTION -->
-            <div class="question-box">
-
-                <small>INTERVIEWER</small>
-
-                <h3 id="question">
-                    Tell me about yourself.
-                </h3>
-
-            </div>
-
-
-            <!-- ANSWER -->
-            <div class="form-group">
-
-                <label for="answer">
-                    Your Answer
-                </label>
+                <div class="question-text" id="questionText">
+                    Question
+                </div>
 
                 <textarea
                     id="answer"
+                    class="answer-box"
                     placeholder="Type your answer here..."
                 ></textarea>
 
+                <div class="interview-actions">
+
+                    <button
+                        class="skip-btn"
+                        onclick="skipQuestion()">
+                        Skip
+                    </button>
+
+                    <button
+                        class="next-btn"
+                        onclick="nextQuestion()">
+                        Next →
+                    </button>
+
+                </div>
+
             </div>
 
 
-            <div class="actions">
+            <!-- RESULT -->
+
+            <div class="result-card" id="resultScreen" style="display:none;">
+
+                <h2>Interview Complete 🎉</h2>
+
+                <div class="score" id="score">
+                    0
+                </div>
+
+                <h3 id="resultTitle">
+                    Your Result
+                </h3>
+
+                <p class="feedback" id="feedback">
+                    Feedback will appear here.
+                </p>
 
                 <button
-                    class="secondary-btn"
-                    onclick="skipQuestion()">
-                    Skip
-                </button>
-
-                <button onclick="nextQuestion()">
-                    Next Question →
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <!-- RESULT SCREEN -->
-        <section class="card" id="resultScreen">
-
-            <div class="result">
-
-                <h2>Interview Completed 🎉</h2>
-
-                <p id="resultGreeting"></p>
-
-                <div class="score-circle">
-                    <span id="score">0%</span>
-                </div>
-
-                <h3>Interview Performance</h3>
-
-                <div class="feedback">
-
-                    <p>
-                        <strong>Communication:</strong>
-                        <span id="communication">
-                            Good
-                        </span>
-                    </p>
-
-                    <p>
-                        <strong>Confidence:</strong>
-                        <span id="confidence">
-                            Good
-                        </span>
-                    </p>
-
-                    <p>
-                        <strong>Answer Quality:</strong>
-                        <span id="quality">
-                            Good
-                        </span>
-                    </p>
-
-                    <p>
-                        <strong>Overall Feedback:</strong>
-                        <span id="overall">
-                            Keep practicing to improve your interview performance.
-                        </span>
-                    </p>
-
-                </div>
-
-                <button onclick="restartInterview()">
+                    class="restart-btn"
+                    onclick="restartInterview()">
                     Practice Again
                 </button>
 
             </div>
 
-        </section>
+        </div>
 
-    </main>
+    </section>
 
+
+    <!-- ================= CONTACT ================= -->
+
+    <section class="section" id="contact">
+
+        <div class="section-heading">
+
+            <h2>Contact Us</h2>
+
+            <p>
+                Have a question or suggestion? We'd love to hear from you.
+            </p>
+
+        </div>
+
+
+        <div class="contact-container">
+
+            <div class="contact-info">
+
+                <div class="contact-item">
+
+                    <div class="contact-icon">📧</div>
+
+                    <div>
+                        <h4>Email</h4>
+                        <p>hello@interviewai.com</p>
+                    </div>
+
+                </div>
+
+
+                <div class="contact-item">
+
+                    <div class="contact-icon">📍</div>
+
+                    <div>
+                        <h4>Location</h4>
+                        <p>India</p>
+                    </div>
+
+                </div>
+
+
+                <div class="contact-item">
+
+                    <div class="contact-icon">🕒</div>
+
+                    <div>
+                        <h4>Support Hours</h4>
+                        <p>Monday - Friday | 9:00 AM - 6:00 PM</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <form
+                class="contact-form"
+                onsubmit="sendMessage(event)"
+            >
+
+                <input
+                    type="text"
+                    placeholder="Your Name"
+                    required
+                >
+
+                <input
+                    type="email"
+                    placeholder="Your Email"
+                    required
+                >
+
+                <textarea
+                    placeholder="Your Message"
+                    required
+                ></textarea>
+
+                <button
+                    type="submit"
+                    class="primary-button">
+                    Send Message →
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= FOOTER ================= -->
 
     <footer>
-        © 2026 InterviewAI — Interview Practice Simulator
+
+        <div class="footer-main">
+
+            <div class="footer-brand">
+
+                <div class="logo">
+                    Interview<span>AI</span>
+                </div>
+
+                <p>
+                    A modern interview practice platform designed to
+                    help candidates prepare, practice and improve.
+                </p>
+
+                <div class="social-links">
+
+                    <a href="#">in</a>
+                    <a href="#">𝕏</a>
+                    <a href="#">◎</a>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>Company</h4>
+
+                <a href="#about">About Us</a>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#contact">Contact</a>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h4>Product</h4>
+
+                <a href="#interview">Interview Simulator</a>
+                <a href="#features">Features</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-bottom">
+
+            <span>
+                © 2026 InterviewAI. All rights reserved.
+            </span>
+
+            <span>
+                Built for better interview preparation.
+            </span>
+
+        </div>
+
     </footer>
 
 
-    <script>
+    <!-- ================= JAVASCRIPT ================= -->
 
-        /* QUESTIONS */
+    <script>
 
         const questions = {
 
-            "Frontend Developer": [
-                "Tell me about yourself.",
+            frontend: [
                 "What is the difference between HTML, CSS and JavaScript?",
-                "What is the DOM in JavaScript?",
+                "What is the DOM and how does JavaScript interact with it?",
                 "What is responsive web design?",
-                "Why should we hire you as a frontend developer?"
+                "Explain the difference between Flexbox and CSS Grid.",
+                "What are semantic HTML elements?"
             ],
 
-            "Backend Developer": [
-                "Tell me about yourself.",
-                "What is an API?",
-                "What is the difference between SQL and NoSQL?",
-                "Explain authentication and authorization.",
-                "Why should we hire you?"
+            backend: [
+                "What is a REST API?",
+                "What is the difference between SQL and NoSQL databases?",
+                "What is authentication and authorization?",
+                "What is server-side programming?",
+                "Explain what an API endpoint is."
             ],
 
-            "Data Analyst": [
-                "Tell me about yourself.",
-                "What is the difference between SQL and Excel?",
+            data: [
+                "What is the difference between mean, median and mode?",
                 "What is data cleaning?",
-                "Which data visualization tools have you used?",
-                "Why should we hire you as a data analyst?"
+                "What is SQL and why is it used?",
+                "What is data visualization?",
+                "What is the difference between correlation and causation?"
             ],
 
-            "Software Developer": [
-                "Tell me about yourself.",
-                "What programming languages do you know?",
-                "Explain object-oriented programming.",
+            software: [
+                "What is object-oriented programming?",
                 "What is version control?",
-                "Why should we hire you?"
+                "What is Git and why is it useful?",
+                "What is the software development life cycle?",
+                "What is debugging?"
             ],
 
-            "HR": [
+            hr: [
                 "Tell me about yourself.",
-                "How would you handle a conflict between employees?",
-                "What makes a good team member?",
-                "How do you handle pressure?",
-                "Why should we hire you?"
+                "Why do you want to work with our company?",
+                "What are your strengths?",
+                "How do you handle conflict?",
+                "Where do you see yourself in five years?"
             ],
 
-            "Marketing": [
-                "Tell me about yourself.",
+            marketing: [
                 "What is digital marketing?",
-                "How would you promote a new product?",
                 "What is SEO?",
-                "Why should we hire you?"
+                "What is social media marketing?",
+                "How would you promote a new product?",
+                "What is a target audience?"
             ]
 
         };
 
 
         let currentQuestion = 0;
-        let answers = [];
+
         let selectedQuestions = [];
+
+        let answers = [];
+
         let timeLeft = 60;
+
         let timerInterval;
 
-
-        /* START INTERVIEW */
 
         function startInterview() {
 
             const name =
                 document.getElementById("candidateName").value.trim();
 
+            if (name === "") {
+
+                alert("Please enter your name.");
+
+                return;
+            }
+
+
             const role =
                 document.getElementById("jobRole").value;
 
-            if (name === "") {
-                alert("Please enter your name.");
-                return;
-            }
 
             selectedQuestions = questions[role];
 
             currentQuestion = 0;
+
             answers = [];
+
 
             document.getElementById("setupScreen").style.display = "none";
 
-            document.getElementById("interviewScreen").style.display = "block";
+            document.getElementById("questionScreen").style.display = "block";
 
-            document.getElementById("candidateInfo").innerText =
-                name + " • " + role;
+            document.getElementById("resultScreen").style.display = "none";
+
 
             showQuestion();
 
         }
 
 
-        /* SHOW QUESTION */
-
         function showQuestion() {
 
-            document.getElementById("question").innerText =
+            const question =
                 selectedQuestions[currentQuestion];
 
-            document.getElementById("questionNumber").innerText =
+
+            document.getElementById("questionNumber").textContent =
                 "Question " +
                 (currentQuestion + 1) +
                 " of " +
                 selectedQuestions.length;
 
-            const percentage =
-                ((currentQuestion + 1) /
-                selectedQuestions.length) * 100;
 
-            document.getElementById("percentage").innerText =
-                Math.round(percentage) + "%";
+            document.getElementById("questionText").textContent =
+                question;
 
-            document.getElementById("progressFill").style.width =
-                percentage + "%";
 
             document.getElementById("answer").value = "";
+
+
+            const progress =
+                ((currentQuestion) /
+                selectedQuestions.length) * 100;
+
+
+            document.getElementById("progressBar").style.width =
+                progress + "%";
+
 
             startTimer();
 
         }
 
-
-        /* TIMER */
 
         function startTimer() {
 
@@ -671,15 +1572,17 @@
 
             timeLeft = 60;
 
-            document.getElementById("timer").innerText =
-                timeLeft;
+            document.getElementById("timer").textContent =
+                "⏱ " + timeLeft + "s";
 
-            timerInterval = setInterval(() => {
+
+            timerInterval = setInterval(function() {
 
                 timeLeft--;
 
-                document.getElementById("timer").innerText =
-                    timeLeft;
+                document.getElementById("timer").textContent =
+                    "⏱ " + timeLeft + "s";
+
 
                 if (timeLeft <= 0) {
 
@@ -694,18 +1597,20 @@
         }
 
 
-        /* NEXT QUESTION */
-
         function nextQuestion() {
 
             clearInterval(timerInterval);
 
+
             const answer =
                 document.getElementById("answer").value.trim();
 
+
             answers.push(answer);
 
+
             currentQuestion++;
+
 
             if (currentQuestion >= selectedQuestions.length) {
 
@@ -719,16 +1624,15 @@
 
         }
 
-
-        /* SKIP */
 
         function skipQuestion() {
 
-            answers.push("");
-
             clearInterval(timerInterval);
 
+            answers.push("");
+
             currentQuestion++;
+
 
             if (currentQuestion >= selectedQuestions.length) {
 
@@ -742,105 +1646,114 @@
 
         }
 
-
-        /* FINISH */
 
         function finishInterview() {
 
             clearInterval(timerInterval);
 
-            document.getElementById("interviewScreen").style.display =
+
+            document.getElementById("questionScreen").style.display =
                 "none";
+
 
             document.getElementById("resultScreen").style.display =
                 "block";
 
-            const name =
-                document.getElementById("candidateName").value;
 
-            document.getElementById("resultGreeting").innerText =
-                "Great job, " + name + "! Here is your interview result.";
-
-            calculateScore();
-
-        }
+            const score = calculateScore();
 
 
-        /* SCORE */
-
-        function calculateScore() {
-
-            let answered = 0;
-
-            answers.forEach(answer => {
-
-                if (answer.length > 20) {
-                    answered++;
-                }
-
-            });
-
-            let score =
-                Math.round(
-                    (answered / selectedQuestions.length) * 100
-                );
-
-            document.getElementById("score").innerText =
+            document.getElementById("score").textContent =
                 score + "%";
+
+
+            let title = "";
+
+            let feedback = "";
 
 
             if (score >= 80) {
 
-                document.getElementById("communication").innerText =
-                    "Excellent";
+                title = "Excellent Performance! 🚀";
 
-                document.getElementById("confidence").innerText =
-                    "Excellent";
-
-                document.getElementById("quality").innerText =
-                    "Excellent";
-
-                document.getElementById("overall").innerText =
-                    "Excellent preparation. Keep practicing real interview questions.";
+                feedback =
+                    "Great job! Your answers show strong preparation. Keep practicing to become even more confident.";
 
             }
 
             else if (score >= 50) {
 
-                document.getElementById("communication").innerText =
-                    "Good";
+                title = "Good Start! 👍";
 
-                document.getElementById("confidence").innerText =
-                    "Good";
-
-                document.getElementById("quality").innerText =
-                    "Average";
-
-                document.getElementById("overall").innerText =
-                    "You are on the right track. Try giving more detailed answers.";
+                feedback =
+                    "You have a good foundation. Practice explaining your answers more clearly and add more relevant details.";
 
             }
 
             else {
 
-                document.getElementById("communication").innerText =
-                    "Needs Improvement";
+                title = "Keep Practicing! 💪";
 
-                document.getElementById("confidence").innerText =
-                    "Needs Improvement";
-
-                document.getElementById("quality").innerText =
-                    "Needs Improvement";
-
-                document.getElementById("overall").innerText =
-                    "Practice answering questions with clear and detailed responses.";
+                feedback =
+                    "Don't worry. Interview skills improve with practice. Review the questions and try the interview again.";
 
             }
+
+
+            document.getElementById("resultTitle").textContent =
+                title;
+
+
+            document.getElementById("feedback").textContent =
+                feedback;
 
         }
 
 
-        /* RESTART */
+        function calculateScore() {
+
+            let total = 0;
+
+
+            answers.forEach(function(answer) {
+
+                if (answer.length >= 100) {
+
+                    total += 20;
+
+                }
+
+                else if (answer.length >= 60) {
+
+                    total += 15;
+
+                }
+
+                else if (answer.length >= 30) {
+
+                    total += 10;
+
+                }
+
+                else if (answer.length > 0) {
+
+                    total += 5;
+
+                }
+
+            });
+
+
+            return Math.min(
+                100,
+                Math.round(
+                    (total /
+                    (selectedQuestions.length * 20)) * 100
+                )
+            );
+
+        }
+
 
         function restartInterview() {
 
@@ -850,11 +1763,27 @@
             document.getElementById("setupScreen").style.display =
                 "block";
 
-            document.getElementById("candidateName").value = "";
+            document.getElementById("candidateName").value =
+                "";
+
+            window.location.hash = "interview";
+
+        }
+
+
+        function sendMessage(event) {
+
+            event.preventDefault();
+
+            alert(
+                "Thank you for contacting InterviewAI! We will get back to you soon."
+            );
+
+            event.target.reset();
 
         }
 
     </script>
-<script src="script.js"></script>
+
 </body>
 </html>
