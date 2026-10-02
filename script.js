@@ -1,11 +1,11 @@
-/* =====================================================
-   INTERVIEW AI - MAIN JAVASCRIPT
-   ===================================================== */
+// ==========================================
+// INTERVIEWAI - JAVASCRIPT
+// ==========================================
 
 
-/* =====================================================
-   INTERVIEW QUESTIONS
-   ===================================================== */
+// ==========================================
+// INTERVIEW QUESTIONS
+// ==========================================
 
 const questions = {
 
@@ -60,96 +60,122 @@ const questions = {
 };
 
 
-/* =====================================================
-   VARIABLES
-   ===================================================== */
+// ==========================================
+// VARIABLES
+// ==========================================
 
 let currentQuestion = 0;
-
 let selectedQuestions = [];
-
 let answers = [];
 
 let timeLeft = 60;
-
 let timerInterval = null;
 
 
-/* =====================================================
-   GET HTML ELEMENTS
-   ===================================================== */
+// ==========================================
+// OPEN INTERVIEW SECTION
+// ==========================================
 
-const setupScreen =
-    document.getElementById("setupScreen");
+function openInterview() {
 
-const questionScreen =
-    document.getElementById("questionScreen");
+    const interviewSection =
+        document.getElementById("interview");
 
-const resultScreen =
-    document.getElementById("resultScreen");
+    if (!interviewSection) {
+        console.error("Interview section not found.");
+        return;
+    }
 
-const candidateName =
-    document.getElementById("candidateName");
+    // Make sure the section is visible
+    interviewSection.style.display = "block";
 
-const jobRole =
-    document.getElementById("jobRole");
+    // Scroll to interview
+    interviewSection.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 
-const experience =
-    document.getElementById("experience");
+    // Focus name field
+    setTimeout(() => {
 
-const questionNumber =
-    document.getElementById("questionNumber");
+        const nameInput =
+            document.getElementById("candidateName");
 
-const questionText =
-    document.getElementById("questionText");
+        if (nameInput) {
+            nameInput.focus();
+        }
 
-const answerBox =
-    document.getElementById("answer");
-
-const timer =
-    document.getElementById("timer");
-
-const progressBar =
-    document.getElementById("progressBar");
-
-const scoreElement =
-    document.getElementById("score");
-
-const resultTitle =
-    document.getElementById("resultTitle");
-
-const feedback =
-    document.getElementById("feedback");
+    }, 600);
+}
 
 
-/* =====================================================
-   START INTERVIEW
-   ===================================================== */
+// ==========================================
+// START INTERVIEW
+// ==========================================
 
 function startInterview() {
 
-    const name = candidateName.value.trim();
+    const nameInput =
+        document.getElementById("candidateName");
 
+    const roleInput =
+        document.getElementById("jobRole");
+
+    if (!nameInput || !roleInput) {
+        console.error("Interview form elements not found.");
+        return;
+    }
+
+    const name =
+        nameInput.value.trim();
+
+    const role =
+        roleInput.value;
+
+
+    // Check name
     if (name === "") {
 
-        alert("Please enter your name.");
+        alert("Please enter your name first.");
 
-        candidateName.focus();
+        nameInput.focus();
 
         return;
-
     }
 
 
-    const role = jobRole.value;
+    // Check role
+    if (role === "" || !questions[role]) {
 
-    selectedQuestions = questions[role];
+        alert("Please select a job role.");
+
+        roleInput.focus();
+
+        return;
+    }
+
+
+    // Reset interview
+    selectedQuestions =
+        questions[role];
 
     currentQuestion = 0;
 
     answers = [];
 
 
+    // Get screens
+    const setupScreen =
+        document.getElementById("setupScreen");
+
+    const questionScreen =
+        document.getElementById("questionScreen");
+
+    const resultScreen =
+        document.getElementById("resultScreen");
+
+
+    // Show question screen
     setupScreen.style.display = "none";
 
     questionScreen.style.display = "block";
@@ -157,159 +183,176 @@ function startInterview() {
     resultScreen.style.display = "none";
 
 
+    // Show first question
     showQuestion();
 
 
-    // Scroll to interview section
-    document.getElementById("interview").scrollIntoView({
-        behavior: "smooth"
+    // Scroll to question area
+    questionScreen.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
     });
-
 }
 
 
-/* =====================================================
-   SHOW QUESTION
-   ===================================================== */
+// ==========================================
+// SHOW QUESTION
+// ==========================================
 
 function showQuestion() {
 
-    if (
-        !selectedQuestions ||
-        selectedQuestions.length === 0
-    ) {
-
-        alert("No questions available.");
-
+    if (!selectedQuestions.length) {
         return;
-
     }
 
 
-    const question =
+    const questionText =
+        document.getElementById("questionText");
+
+    const questionNumber =
+        document.getElementById("questionNumber");
+
+    const answerBox =
+        document.getElementById("answer");
+
+    const progressBar =
+        document.getElementById("progressBar");
+
+
+    // Question
+    questionText.textContent =
         selectedQuestions[currentQuestion];
 
 
+    // Question number
     questionNumber.textContent =
-        "Question " +
-        (currentQuestion + 1) +
-        " of " +
-        selectedQuestions.length;
+        `Question ${currentQuestion + 1} of ${selectedQuestions.length}`;
 
 
-    questionText.textContent = question;
-
-
+    // Clear answer box
     answerBox.value = "";
 
 
+    // Progress
     const progress =
         (currentQuestion /
-        selectedQuestions.length) * 100;
-
+            selectedQuestions.length) * 100;
 
     progressBar.style.width =
         progress + "%";
 
 
+    // Start timer
     startTimer();
 
 
-    // Automatically place cursor inside answer box
+    // Focus answer box
     setTimeout(() => {
-        answerBox.focus();
-    }, 200);
 
+        answerBox.focus();
+
+    }, 300);
 }
 
 
-/* =====================================================
-   TIMER
-   ===================================================== */
+// ==========================================
+// START TIMER
+// ==========================================
 
 function startTimer() {
 
     clearInterval(timerInterval);
 
-
     timeLeft = 60;
 
-
-    timer.textContent =
-        "⏱ " + timeLeft + "s";
+    updateTimer();
 
 
     timerInterval = setInterval(() => {
 
         timeLeft--;
 
-
-        timer.textContent =
-            "⏱ " + timeLeft + "s";
-
-
-        // Change timer appearance when time is low
-        if (timeLeft <= 10) {
-
-            timer.style.color = "#f87171";
-
-        } else {
-
-            timer.style.color = "#fca5a5";
-
-        }
+        updateTimer();
 
 
         if (timeLeft <= 0) {
 
             clearInterval(timerInterval);
 
-            timer.textContent = "⏱ Time's Up!";
-
-            setTimeout(() => {
-
-                nextQuestion();
-
-            }, 500);
+            // Automatically move to next question
+            nextQuestion();
 
         }
 
     }, 1000);
-
 }
 
 
-/* =====================================================
-   SAVE CURRENT ANSWER
-   ===================================================== */
+// ==========================================
+// UPDATE TIMER
+// ==========================================
 
-function saveCurrentAnswer() {
+function updateTimer() {
 
-    const answer =
-        answerBox.value.trim();
+    const timer =
+        document.getElementById("timer");
+
+    if (!timer) {
+        return;
+    }
+
+
+    timer.textContent =
+        `⏱ ${timeLeft}s`;
+
+
+    if (timeLeft <= 10) {
+
+        timer.style.color =
+            "#ff6b6b";
+
+    } else {
+
+        timer.style.color =
+            "#fca5a5";
+
+    }
+}
+
+
+// ==========================================
+// SAVE ANSWER
+// ==========================================
+
+function saveAnswer() {
+
+    const answerBox =
+        document.getElementById("answer");
+
+    if (!answerBox) {
+        return;
+    }
 
 
     answers[currentQuestion] =
-        answer;
-
+        answerBox.value.trim();
 }
 
 
-/* =====================================================
-   NEXT QUESTION
-   ===================================================== */
+// ==========================================
+// NEXT QUESTION
+// ==========================================
 
 function nextQuestion() {
 
     clearInterval(timerInterval);
 
-
-    saveCurrentAnswer();
-
+    saveAnswer();
 
     currentQuestion++;
 
 
+    // Check if interview is finished
     if (
         currentQuestion >=
         selectedQuestions.length
@@ -318,31 +361,28 @@ function nextQuestion() {
         finishInterview();
 
         return;
-
     }
 
 
     showQuestion();
-
 }
 
 
-/* =====================================================
-   SKIP QUESTION
-   ===================================================== */
+// ==========================================
+// SKIP QUESTION
+// ==========================================
 
 function skipQuestion() {
 
     clearInterval(timerInterval);
 
-
-    // Store empty answer for skipped question
+    // Store empty answer
     answers[currentQuestion] = "";
-
 
     currentQuestion++;
 
 
+    // Check if interview is finished
     if (
         currentQuestion >=
         selectedQuestions.length
@@ -351,76 +391,83 @@ function skipQuestion() {
         finishInterview();
 
         return;
-
     }
 
 
     showQuestion();
-
 }
 
 
-/* =====================================================
-   FINISH INTERVIEW
-   ===================================================== */
+// ==========================================
+// FINISH INTERVIEW
+// ==========================================
 
 function finishInterview() {
 
     clearInterval(timerInterval);
 
 
-    // Make progress complete
-    progressBar.style.width = "100%";
+    const questionScreen =
+        document.getElementById("questionScreen");
+
+    const resultScreen =
+        document.getElementById("resultScreen");
+
+    const progressBar =
+        document.getElementById("progressBar");
 
 
     questionScreen.style.display =
         "none";
 
-
     resultScreen.style.display =
         "block";
 
+    progressBar.style.width =
+        "100%";
 
-    const finalScore =
+
+    // Calculate score
+    const score =
         calculateScore();
 
 
-    scoreElement.textContent =
-        finalScore + "%";
+    document.getElementById("score")
+        .textContent =
+        score + "%";
 
 
     let title;
-
     let message;
 
 
-    if (finalScore >= 80) {
+    if (score >= 80) {
 
         title =
             "Excellent Performance! 🚀";
 
         message =
-            "Excellent work! Your answers show strong preparation and good communication. Keep practicing to become even more confident.";
+            "Excellent work! Your answers show strong preparation and good communication.";
 
     }
 
-    else if (finalScore >= 60) {
+    else if (score >= 60) {
 
         title =
             "Good Performance! 👍";
 
         message =
-            "Good job! You have a solid foundation. Try adding more examples and details to make your answers stronger.";
+            "Good job! You have a solid foundation. Try adding more examples and details.";
 
     }
 
-    else if (finalScore >= 40) {
+    else if (score >= 40) {
 
         title =
             "Good Start! 💪";
 
         message =
-            "You are on the right track. Practice explaining your answers clearly and try to include more relevant details.";
+            "You are on the right track. Practice explaining your answers more clearly.";
 
     }
 
@@ -430,42 +477,41 @@ function finishInterview() {
             "Keep Practicing! 📚";
 
         message =
-            "Don't worry. Interview skills improve with practice. Review the questions and try the simulator again.";
+            "Keep practicing. Review the questions and try the simulator again.";
 
     }
 
 
-    resultTitle.textContent =
+    document.getElementById("resultTitle")
+        .textContent =
         title;
 
-
-    feedback.textContent =
+    document.getElementById("feedback")
+        .textContent =
         message;
 
 
-    // Scroll to results
+    // Scroll to result
     resultScreen.scrollIntoView({
-        behavior: "smooth"
+        behavior: "smooth",
+        block: "start"
     });
-
 }
 
 
-/* =====================================================
-   CALCULATE SCORE
-   ===================================================== */
+// ==========================================
+// CALCULATE SCORE
+// ==========================================
 
 function calculateScore() {
 
-    let totalScore = 0;
+    let total = 0;
 
 
     answers.forEach(answer => {
 
         if (!answer) {
-
             return;
-
         }
 
 
@@ -475,122 +521,162 @@ function calculateScore() {
 
         if (length >= 150) {
 
-            totalScore += 20;
+            total += 20;
 
         }
 
         else if (length >= 100) {
 
-            totalScore += 17;
+            total += 17;
 
         }
 
         else if (length >= 70) {
 
-            totalScore += 14;
+            total += 14;
 
         }
 
         else if (length >= 40) {
 
-            totalScore += 10;
+            total += 10;
 
         }
 
         else if (length >= 20) {
 
-            totalScore += 6;
+            total += 6;
 
         }
 
         else {
 
-            totalScore += 3;
+            total += 3;
 
         }
 
     });
 
 
-    const maximumScore =
+    const maximum =
         selectedQuestions.length * 20;
 
 
-    if (maximumScore === 0) {
-
+    if (maximum === 0) {
         return 0;
-
     }
 
 
     return Math.min(
         100,
         Math.round(
-            (totalScore /
-            maximumScore) * 100
+            (total / maximum) * 100
         )
     );
-
 }
 
 
-/* =====================================================
-   RESTART INTERVIEW
-   ===================================================== */
+// ==========================================
+// RESTART INTERVIEW
+// ==========================================
 
 function restartInterview() {
 
     clearInterval(timerInterval);
 
 
+    // Reset variables
     currentQuestion = 0;
-
-    answers = [];
 
     selectedQuestions = [];
 
+    answers = [];
+
+    timeLeft = 60;
+
+
+    // Get screens
+    const setupScreen =
+        document.getElementById("setupScreen");
+
+    const questionScreen =
+        document.getElementById("questionScreen");
+
+    const resultScreen =
+        document.getElementById("resultScreen");
+
+
+    // Show setup
+    setupScreen.style.display =
+        "block";
+
+    questionScreen.style.display =
+        "none";
 
     resultScreen.style.display =
         "none";
 
 
-    questionScreen.style.display =
-        "none";
+    // Reset progress
+    const progressBar =
+        document.getElementById("progressBar");
+
+    if (progressBar) {
+
+        progressBar.style.width =
+            "0%";
+
+    }
 
 
-    setupScreen.style.display =
-        "block";
+    // Reset timer
+    const timer =
+        document.getElementById("timer");
+
+    if (timer) {
+
+        timer.textContent =
+            "⏱ 60s";
+
+    }
 
 
-    progressBar.style.width =
-        "0%";
+    // Clear fields
+    const nameInput =
+        document.getElementById("candidateName");
+
+    const answerBox =
+        document.getElementById("answer");
+
+    if (nameInput) {
+        nameInput.value = "";
+    }
+
+    if (answerBox) {
+        answerBox.value = "";
+    }
 
 
-    timer.textContent =
-        "⏱ 60s";
-
-
-    candidateName.value =
-        "";
-
-
-    answerBox.value =
-        "";
-
-
-    candidateName.focus();
-
-
-    document.getElementById("interview").scrollIntoView({
-        behavior: "smooth"
+    // Scroll back to setup
+    setupScreen.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
     });
 
+
+    setTimeout(() => {
+
+        if (nameInput) {
+            nameInput.focus();
+        }
+
+    }, 500);
 }
 
 
-/* =====================================================
-   CONTACT FORM
-   ===================================================== */
+// ==========================================
+// CONTACT FORM
+// ==========================================
 
 function sendMessage(event) {
 
@@ -620,9 +706,9 @@ function sendMessage(event) {
 
 
     if (
-        name === "" ||
-        email === "" ||
-        message === ""
+        !name ||
+        !email ||
+        !message
     ) {
 
         alert(
@@ -630,87 +716,31 @@ function sendMessage(event) {
         );
 
         return;
-
     }
 
 
     alert(
-        "Thank you, " +
-        name +
-        "! Your message has been received."
+        `Thank you, ${name}! Your message has been received.`
     );
 
 
     form.reset();
-
 }
 
 
-/* =====================================================
-   NAVIGATION BUTTONS
-   ===================================================== */
-
-// Smooth scrolling for all internal links
-
-document.querySelectorAll(
-    'a[href^="#"]'
-).forEach(link => {
-
-    link.addEventListener(
-        "click",
-        function(event) {
-
-            const targetId =
-                this.getAttribute("href");
-
-
-            if (
-                targetId === "#" ||
-                targetId === ""
-            ) {
-
-                return;
-
-            }
-
-
-            const target =
-                document.querySelector(
-                    targetId
-                );
-
-
-            if (target) {
-
-                event.preventDefault();
-
-
-                target.scrollIntoView({
-                    behavior: "smooth"
-                });
-
-            }
-
-        }
-    );
-
-});
-
-
-/* =====================================================
-   KEYBOARD SHORTCUTS
-   ===================================================== */
+// ==========================================
+// KEYBOARD SHORTCUT
+// Ctrl + Enter = Next Question
+// ==========================================
 
 document.addEventListener(
     "keydown",
     function(event) {
 
-        // Ctrl + Enter = Next Question
-
         if (
             event.ctrlKey &&
             event.key === "Enter" &&
-            questionScreen.style.display !== "none"
+            selectedQuestions.length > 0
         ) {
 
             event.preventDefault();
@@ -723,24 +753,69 @@ document.addEventListener(
 );
 
 
-/* =====================================================
-   PAGE LOAD
-   ===================================================== */
+// ==========================================
+// MOBILE NAVIGATION
+// ==========================================
 
-window.addEventListener(
-    "load",
+document.addEventListener(
+    "DOMContentLoaded",
     function() {
 
-        // Make sure correct initial state is shown
+        const hamburger =
+            document.getElementById("hamburger");
 
-        setupScreen.style.display =
-            "block";
+        const navLinks =
+            document.getElementById("navLinks");
 
-        questionScreen.style.display =
-            "none";
 
-        resultScreen.style.display =
-            "none";
+        if (
+            !hamburger ||
+            !navLinks
+        ) {
+            return;
+        }
+
+
+        hamburger.addEventListener(
+            "click",
+            function() {
+
+                navLinks.classList.toggle(
+                    "active"
+                );
+
+            }
+        );
+
+
+        // Close menu after clicking a link
+        const links =
+            navLinks.querySelectorAll("a");
+
+
+        links.forEach(link => {
+
+            link.addEventListener(
+                "click",
+                function() {
+
+                    navLinks.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
+        });
 
     }
+);
+
+
+// ==========================================
+// CHECK JAVASCRIPT
+// ==========================================
+
+console.log(
+    "InterviewAI JavaScript loaded successfully."
 );
