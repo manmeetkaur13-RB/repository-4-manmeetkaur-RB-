@@ -1,391 +1,547 @@
-// ===============================
-// INTERVIEW QUESTIONS
-// ===============================
+/* =====================================================
+   INTERVIEW AI - MAIN JAVASCRIPT
+   ===================================================== */
+
+
+/* =====================================================
+   INTERVIEW QUESTIONS
+   ===================================================== */
 
 const questions = {
-    "Frontend Developer": [
-        "Tell me about yourself.",
+
+    frontend: [
         "What is the difference between HTML, CSS and JavaScript?",
-        "What is the DOM in JavaScript?",
+        "What is the DOM and how does JavaScript interact with it?",
         "What is responsive web design?",
-        "Why should we hire you as a frontend developer?"
+        "Explain the difference between Flexbox and CSS Grid.",
+        "What are semantic HTML elements?"
     ],
 
-    "Backend Developer": [
-        "Tell me about yourself.",
-        "What is an API?",
-        "What is the difference between SQL and NoSQL?",
-        "Explain authentication and authorization.",
-        "Why should we hire you?"
+    backend: [
+        "What is a REST API?",
+        "What is the difference between SQL and NoSQL databases?",
+        "What is authentication and authorization?",
+        "What is server-side programming?",
+        "Explain what an API endpoint is."
     ],
 
-    "Data Analyst": [
-        "Tell me about yourself.",
-        "What is the difference between SQL and Excel?",
+    data: [
+        "What is the difference between mean, median and mode?",
         "What is data cleaning?",
-        "Which data visualization tools have you used?",
-        "Why should we hire you as a data analyst?"
+        "What is SQL and why is it used?",
+        "What is data visualization?",
+        "What is the difference between correlation and causation?"
     ],
 
-    "Software Developer": [
-        "Tell me about yourself.",
-        "What programming languages do you know?",
-        "Explain object-oriented programming.",
+    software: [
+        "What is object-oriented programming?",
         "What is version control?",
-        "Why should we hire you?"
+        "What is Git and why is it useful?",
+        "What is the software development life cycle?",
+        "What is debugging?"
     ],
 
-    "HR": [
+    hr: [
         "Tell me about yourself.",
-        "How would you handle a conflict between employees?",
-        "What makes a good team member?",
-        "How do you handle pressure?",
-        "Why should we hire you?"
+        "Why do you want to work with our company?",
+        "What are your strengths?",
+        "How do you handle conflict?",
+        "Where do you see yourself in five years?"
     ],
 
-    "Marketing": [
-        "Tell me about yourself.",
+    marketing: [
         "What is digital marketing?",
-        "How would you promote a new product?",
         "What is SEO?",
-        "Why should we hire you?"
+        "What is social media marketing?",
+        "How would you promote a new product?",
+        "What is a target audience?"
     ]
+
 };
 
 
-// ===============================
-// VARIABLES
-// ===============================
+/* =====================================================
+   VARIABLES
+   ===================================================== */
 
 let currentQuestion = 0;
+
 let selectedQuestions = [];
+
 let answers = [];
 
 let timeLeft = 60;
-let timerInterval;
+
+let timerInterval = null;
 
 
-// ===============================
-// START INTERVIEW
-// ===============================
+/* =====================================================
+   GET HTML ELEMENTS
+   ===================================================== */
+
+const setupScreen =
+    document.getElementById("setupScreen");
+
+const questionScreen =
+    document.getElementById("questionScreen");
+
+const resultScreen =
+    document.getElementById("resultScreen");
+
+const candidateName =
+    document.getElementById("candidateName");
+
+const jobRole =
+    document.getElementById("jobRole");
+
+const experience =
+    document.getElementById("experience");
+
+const questionNumber =
+    document.getElementById("questionNumber");
+
+const questionText =
+    document.getElementById("questionText");
+
+const answerBox =
+    document.getElementById("answer");
+
+const timer =
+    document.getElementById("timer");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const scoreElement =
+    document.getElementById("score");
+
+const resultTitle =
+    document.getElementById("resultTitle");
+
+const feedback =
+    document.getElementById("feedback");
+
+
+/* =====================================================
+   START INTERVIEW
+   ===================================================== */
 
 function startInterview() {
 
-    const name = document
-        .getElementById("candidateName")
-        .value
-        .trim();
-
-    const role = document
-        .getElementById("jobRole")
-        .value;
+    const name = candidateName.value.trim();
 
     if (name === "") {
+
         alert("Please enter your name.");
+
+        candidateName.focus();
+
         return;
+
     }
+
+
+    const role = jobRole.value;
 
     selectedQuestions = questions[role];
 
     currentQuestion = 0;
+
     answers = [];
 
-    document.getElementById("setupScreen").style.display = "none";
 
-    document.getElementById("interviewScreen").style.display = "block";
+    setupScreen.style.display = "none";
 
-    document.getElementById("candidateInfo").innerText =
-        `${name} • ${role}`;
+    questionScreen.style.display = "block";
+
+    resultScreen.style.display = "none";
+
 
     showQuestion();
+
+
+    // Scroll to interview section
+    document.getElementById("interview").scrollIntoView({
+        behavior: "smooth"
+    });
+
 }
 
 
-// ===============================
-// DISPLAY QUESTION
-// ===============================
+/* =====================================================
+   SHOW QUESTION
+   ===================================================== */
 
 function showQuestion() {
 
-    const questionElement =
-        document.getElementById("question");
+    if (
+        !selectedQuestions ||
+        selectedQuestions.length === 0
+    ) {
 
-    const questionNumber =
-        document.getElementById("questionNumber");
+        alert("No questions available.");
 
-    const percentage =
-        document.getElementById("percentage");
+        return;
 
-    const progressFill =
-        document.getElementById("progressFill");
-
-    const answer =
-        document.getElementById("answer");
+    }
 
 
-    // Display current question
-    questionElement.innerText =
+    const question =
         selectedQuestions[currentQuestion];
 
 
-    // Question number
-    questionNumber.innerText =
-        `Question ${currentQuestion + 1} of ${selectedQuestions.length}`;
+    questionNumber.textContent =
+        "Question " +
+        (currentQuestion + 1) +
+        " of " +
+        selectedQuestions.length;
 
 
-    // Calculate progress
+    questionText.textContent = question;
+
+
+    answerBox.value = "";
+
+
     const progress =
-        ((currentQuestion + 1) /
+        (currentQuestion /
         selectedQuestions.length) * 100;
 
 
-    percentage.innerText =
-        `${Math.round(progress)}%`;
+    progressBar.style.width =
+        progress + "%";
 
 
-    progressFill.style.width =
-        `${progress}%`;
-
-
-    // Clear previous answer
-    answer.value = "";
-
-
-    // Start timer
     startTimer();
+
+
+    // Automatically place cursor inside answer box
+    setTimeout(() => {
+        answerBox.focus();
+    }, 200);
+
 }
 
 
-// ===============================
-// TIMER
-// ===============================
+/* =====================================================
+   TIMER
+   ===================================================== */
 
 function startTimer() {
 
     clearInterval(timerInterval);
 
+
     timeLeft = 60;
 
-    document.getElementById("timer").innerText =
-        timeLeft;
+
+    timer.textContent =
+        "⏱ " + timeLeft + "s";
 
 
     timerInterval = setInterval(() => {
 
         timeLeft--;
 
-        document.getElementById("timer").innerText =
-            timeLeft;
+
+        timer.textContent =
+            "⏱ " + timeLeft + "s";
 
 
-        // Time finished
+        // Change timer appearance when time is low
+        if (timeLeft <= 10) {
+
+            timer.style.color = "#f87171";
+
+        } else {
+
+            timer.style.color = "#fca5a5";
+
+        }
+
+
         if (timeLeft <= 0) {
 
             clearInterval(timerInterval);
 
-            nextQuestion();
+            timer.textContent = "⏱ Time's Up!";
+
+            setTimeout(() => {
+
+                nextQuestion();
+
+            }, 500);
+
         }
 
     }, 1000);
+
 }
 
 
-// ===============================
-// NEXT QUESTION
-// ===============================
+/* =====================================================
+   SAVE CURRENT ANSWER
+   ===================================================== */
+
+function saveCurrentAnswer() {
+
+    const answer =
+        answerBox.value.trim();
+
+
+    answers[currentQuestion] =
+        answer;
+
+}
+
+
+/* =====================================================
+   NEXT QUESTION
+   ===================================================== */
 
 function nextQuestion() {
 
     clearInterval(timerInterval);
 
 
-    const answer =
-        document
-            .getElementById("answer")
-            .value
-            .trim();
-
-
-    // Save answer
-    answers.push(answer);
+    saveCurrentAnswer();
 
 
     currentQuestion++;
 
 
-    // Check if interview finished
-    if (currentQuestion >= selectedQuestions.length) {
+    if (
+        currentQuestion >=
+        selectedQuestions.length
+    ) {
 
         finishInterview();
 
-    } else {
+        return;
 
-        showQuestion();
     }
+
+
+    showQuestion();
+
 }
 
 
-// ===============================
-// SKIP QUESTION
-// ===============================
+/* =====================================================
+   SKIP QUESTION
+   ===================================================== */
 
 function skipQuestion() {
 
     clearInterval(timerInterval);
 
-    // Store empty answer
-    answers.push("");
+
+    // Store empty answer for skipped question
+    answers[currentQuestion] = "";
+
 
     currentQuestion++;
 
 
-    if (currentQuestion >= selectedQuestions.length) {
+    if (
+        currentQuestion >=
+        selectedQuestions.length
+    ) {
 
         finishInterview();
 
-    } else {
+        return;
 
-        showQuestion();
     }
+
+
+    showQuestion();
+
 }
 
 
-// ===============================
-// FINISH INTERVIEW
-// ===============================
+/* =====================================================
+   FINISH INTERVIEW
+   ===================================================== */
 
 function finishInterview() {
 
     clearInterval(timerInterval);
 
 
-    document.getElementById("interviewScreen")
-        .style.display = "none";
+    // Make progress complete
+    progressBar.style.width = "100%";
 
 
-    document.getElementById("resultScreen")
-        .style.display = "block";
+    questionScreen.style.display =
+        "none";
 
 
-    const name =
-        document
-            .getElementById("candidateName")
-            .value;
+    resultScreen.style.display =
+        "block";
 
 
-    document.getElementById("resultGreeting")
-        .innerText =
-        `Great job, ${name}! Here is your interview result.`;
+    const finalScore =
+        calculateScore();
 
 
-    calculateScore();
+    scoreElement.textContent =
+        finalScore + "%";
+
+
+    let title;
+
+    let message;
+
+
+    if (finalScore >= 80) {
+
+        title =
+            "Excellent Performance! 🚀";
+
+        message =
+            "Excellent work! Your answers show strong preparation and good communication. Keep practicing to become even more confident.";
+
+    }
+
+    else if (finalScore >= 60) {
+
+        title =
+            "Good Performance! 👍";
+
+        message =
+            "Good job! You have a solid foundation. Try adding more examples and details to make your answers stronger.";
+
+    }
+
+    else if (finalScore >= 40) {
+
+        title =
+            "Good Start! 💪";
+
+        message =
+            "You are on the right track. Practice explaining your answers clearly and try to include more relevant details.";
+
+    }
+
+    else {
+
+        title =
+            "Keep Practicing! 📚";
+
+        message =
+            "Don't worry. Interview skills improve with practice. Review the questions and try the simulator again.";
+
+    }
+
+
+    resultTitle.textContent =
+        title;
+
+
+    feedback.textContent =
+        message;
+
+
+    // Scroll to results
+    resultScreen.scrollIntoView({
+        behavior: "smooth"
+    });
+
 }
 
 
-// ===============================
-// CALCULATE SCORE
-// ===============================
+/* =====================================================
+   CALCULATE SCORE
+   ===================================================== */
 
 function calculateScore() {
 
-    let answeredQuestions = 0;
+    let totalScore = 0;
 
 
     answers.forEach(answer => {
 
-        // Consider an answer valid
-        // if it contains more than 20 characters
+        if (!answer) {
 
-        if (answer.length >= 20) {
+            return;
 
-            answeredQuestions++;
+        }
+
+
+        const length =
+            answer.length;
+
+
+        if (length >= 150) {
+
+            totalScore += 20;
+
+        }
+
+        else if (length >= 100) {
+
+            totalScore += 17;
+
+        }
+
+        else if (length >= 70) {
+
+            totalScore += 14;
+
+        }
+
+        else if (length >= 40) {
+
+            totalScore += 10;
+
+        }
+
+        else if (length >= 20) {
+
+            totalScore += 6;
+
+        }
+
+        else {
+
+            totalScore += 3;
+
         }
 
     });
 
 
-    let score =
+    const maximumScore =
+        selectedQuestions.length * 20;
+
+
+    if (maximumScore === 0) {
+
+        return 0;
+
+    }
+
+
+    return Math.min(
+        100,
         Math.round(
-            (answeredQuestions /
-            selectedQuestions.length) * 100
-        );
+            (totalScore /
+            maximumScore) * 100
+        )
+    );
 
-
-    document.getElementById("score")
-        .innerText = `${score}%`;
-
-
-    // ===========================
-    // EXCELLENT
-    // ===========================
-
-    if (score >= 80) {
-
-        document.getElementById("communication")
-            .innerText = "Excellent";
-
-        document.getElementById("confidence")
-            .innerText = "Excellent";
-
-        document.getElementById("quality")
-            .innerText = "Excellent";
-
-        document.getElementById("overall")
-            .innerText =
-            "Excellent preparation! Your answers show good effort and consistency.";
-    }
-
-
-    // ===========================
-    // GOOD
-    // ===========================
-
-    else if (score >= 50) {
-
-        document.getElementById("communication")
-            .innerText = "Good";
-
-        document.getElementById("confidence")
-            .innerText = "Good";
-
-        document.getElementById("quality")
-            .innerText = "Average";
-
-        document.getElementById("overall")
-            .innerText =
-            "Good start. Try giving more detailed and structured answers.";
-    }
-
-
-    // ===========================
-    // NEEDS IMPROVEMENT
-    // ===========================
-
-    else {
-
-        document.getElementById("communication")
-            .innerText = "Needs Improvement";
-
-        document.getElementById("confidence")
-            .innerText = "Needs Improvement";
-
-        document.getElementById("quality")
-            .innerText = "Needs Improvement";
-
-        document.getElementById("overall")
-            .innerText =
-            "Keep practicing. Try giving clear, detailed answers to each question.";
-    }
 }
 
 
-// ===============================
-// RESTART INTERVIEW
-// ===============================
+/* =====================================================
+   RESTART INTERVIEW
+   ===================================================== */
 
 function restartInterview() {
 
     clearInterval(timerInterval);
+
 
     currentQuestion = 0;
 
@@ -394,41 +550,197 @@ function restartInterview() {
     selectedQuestions = [];
 
 
-    document.getElementById("resultScreen")
-        .style.display = "none";
+    resultScreen.style.display =
+        "none";
 
 
-    document.getElementById("interviewScreen")
-        .style.display = "none";
+    questionScreen.style.display =
+        "none";
 
 
-    document.getElementById("setupScreen")
-        .style.display = "block";
+    setupScreen.style.display =
+        "block";
 
 
-    document.getElementById("candidateName")
-        .value = "";
+    progressBar.style.width =
+        "0%";
+
+
+    timer.textContent =
+        "⏱ 60s";
+
+
+    candidateName.value =
+        "";
+
+
+    answerBox.value =
+        "";
+
+
+    candidateName.focus();
+
+
+    document.getElementById("interview").scrollIntoView({
+        behavior: "smooth"
+    });
+
 }
 
 
-// ===============================
-// ENTER KEY SUPPORT
-// ===============================
+/* =====================================================
+   CONTACT FORM
+   ===================================================== */
 
-document.addEventListener("keydown", function(event) {
+function sendMessage(event) {
 
-    // Ctrl + Enter = next question
-
-    if (event.ctrlKey && event.key === "Enter") {
-
-        const interviewScreen =
-            document.getElementById("interviewScreen");
+    event.preventDefault();
 
 
-        if (interviewScreen.style.display === "block") {
+    const form =
+        event.target;
 
-            nextQuestion();
-        }
+
+    const name =
+        form.querySelector(
+            'input[type="text"]'
+        ).value.trim();
+
+
+    const email =
+        form.querySelector(
+            'input[type="email"]'
+        ).value.trim();
+
+
+    const message =
+        form.querySelector(
+            "textarea"
+        ).value.trim();
+
+
+    if (
+        name === "" ||
+        email === "" ||
+        message === ""
+    ) {
+
+        alert(
+            "Please fill in all fields."
+        );
+
+        return;
+
     }
 
+
+    alert(
+        "Thank you, " +
+        name +
+        "! Your message has been received."
+    );
+
+
+    form.reset();
+
+}
+
+
+/* =====================================================
+   NAVIGATION BUTTONS
+   ===================================================== */
+
+// Smooth scrolling for all internal links
+
+document.querySelectorAll(
+    'a[href^="#"]'
+).forEach(link => {
+
+    link.addEventListener(
+        "click",
+        function(event) {
+
+            const targetId =
+                this.getAttribute("href");
+
+
+            if (
+                targetId === "#" ||
+                targetId === ""
+            ) {
+
+                return;
+
+            }
+
+
+            const target =
+                document.querySelector(
+                    targetId
+                );
+
+
+            if (target) {
+
+                event.preventDefault();
+
+
+                target.scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            }
+
+        }
+    );
+
 });
+
+
+/* =====================================================
+   KEYBOARD SHORTCUTS
+   ===================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        // Ctrl + Enter = Next Question
+
+        if (
+            event.ctrlKey &&
+            event.key === "Enter" &&
+            questionScreen.style.display !== "none"
+        ) {
+
+            event.preventDefault();
+
+            nextQuestion();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   PAGE LOAD
+   ===================================================== */
+
+window.addEventListener(
+    "load",
+    function() {
+
+        // Make sure correct initial state is shown
+
+        setupScreen.style.display =
+            "block";
+
+        questionScreen.style.display =
+            "none";
+
+        resultScreen.style.display =
+            "none";
+
+    }
+);
